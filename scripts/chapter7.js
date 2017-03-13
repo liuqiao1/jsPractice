@@ -153,20 +153,38 @@ function Person(name){
     };
 }
 
+(function(){
+    var name = "";
+    function Country(value){
+        name = value;
+    }
+    Country.prototype.getName = function(){
+        return name;
+    }
+    Country.prototype.setName = function(value){
+        name = value;
+    }
+})(); //模仿块级作用域  定义 马上调用
+
+
+
 
 function testPrivate(){
     //alert("testPrivate");
-     var stu = new Student();
+    // var stu = new Student();
     // this.age = 11;
     // alert(stu.name);//undefined
     // alert(stu.age);//undefined
     // alert(Student.name);//Student
-     alert(stu.getName());
+    // alert(stu.getName());
 
-    var person = new Person("Nicholas");
-    alert(person.getName()); //"Nicholas"
-    person.setName("Greg");
-    alert(person.getName()); //"Greg
+    // var person = new Person("Nicholas");
+    // alert(person.getName()); //"Nicholas"
+    // person.setName("Greg");
+    // alert(person.getName()); //"Greg
+
+
+    
     
     /**
      * java 私有变量
