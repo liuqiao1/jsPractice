@@ -117,21 +117,180 @@ undefined
 - 创建
 ```
 const date = new Date();
+
+new Date(Date.parse(''))
+new Date(Date.UTC())可以自动转 不用显示写出
 //秒数
 ```
-- 日期格式
+- 日期格式化方法
 ```
-date.format('yyyy-mm-dd')
+ toDateString()——以特定于实现的格式显示星期几、月、日和年；
+ toTimeString()——以特定于实现的格式显示时、分、秒和时区；
+ toLocaleDateString()——以特定于地区的格式显示星期几、月、日和年；
+ toLocaleTimeString()——以特定于实现的格式显示时、分、秒；
+ toUTCString()——以特定于实现的格式完整的 UTC 日期。
+const start = Date.now()
+start
+1552630076663
+start.toLocaleString()
+"1,552,630,076,663"
+start.toString()
+"1552630076663"
+const d = new Date(start)
+d
+Fri Mar 15 2019 14:07:56 GMT+0800 (中国标准时间)
+d.toLocaleDateString()
+"2019/3/15"
+d.toDateString()
+"Fri Mar 15 2019"
+d.toTimeString()
+"14:07:56 GMT+0800 (中国标准时间)"
+d.toJSON()
+"2019-03-15T06:07:56.663Z"
+d.toUTCString(0
+VM452:1 Uncaught SyntaxError: missing ) after argument list
+d.toUTCString()
+"Fri, 15 Mar 2019 06:07:56 GMT"
 ```
-- 操作方法
+- 日期/时间组建方法
 ```
-date.month();
-date.year();
-date.day();
+date.getMonth();
+date.getYear();
+date.getDate();
+....有很多很多，具体可以查表
 
-//日期比较
-date.toString();
-date.toLocaleString();
+//日期比较,通过转乘秒数相减
+Date 类型的 valueOf()方法，则根本不返回字符串，而是返回日期的毫秒表示。因此，可以方便使用比较操作符（小于或大于）来比较日期值。
+if(date1 < date2)
+
+date.toString();//包含时区
+date.toLocaleString();// 不含时区
+
+Date.now()
 ```
 
 > 如果想根据特定的日期和时间创建日期对象，必须传入表示该日期的毫秒数（即从 UTC 时间 1970 年 1 月 1 日午夜起至该日期止经过的毫秒数）。为了简化这一计算过程，ECMAScript 提供了两个方法：Date.parse()和 Date.UTC()。
+```
+//ECMA-262 没有定义 Date.parse()应该支持哪种日期格式，因此这个方法的行为因实现而异，而且通常是因地区而异。
+Date.parse()
+//Date.UTC()的参数分别是年份、基于 0 的月份（一月是 0，二月是 1，以此类推）、月中的哪一天（1 到 31）、小时数（0 到 23）、分钟、秒以及毫秒数。
+Date.UTC(2019, 3, 15, 22, 30, 30);
+```
+
+## RegExp 类型
+- 新建一个正则表达式
+```
+const reg = new RegExp('^a\s+b$', 'gi');
+
+reg = /^a\s+b$/gi
+
+
+```
+>使用正则表达式字面量和使用 RegExp 构造函数创建的正则表达式不一样。在 ECMAScript 3 中，正则表达式字面量始终会共享同一个 RegExp 实例，而使用构造函数创建的每一个新 RegExp 实例都是一个新实例
+ECMAScript 5 明确规定，使用正则表达式字面量必须像直接调用 RegExp 构造函数一样，每次都创
+建新的 RegExp 实例。
+
+- RegExp的实例属性
+> lastIndex,整数，表示开始搜索下一个匹配项的字符位置，从 0 算起
+
+**这个我用到过**
+
+- RegExp的实例方法
+1. exec()
+> RegExp 对象的主要方法是 exec()，该方法是专门为捕获组而设计的。
+exec()接受一个参数，即要应用模式的字符串，然后返回包含第一个匹配项信息的数组；或者在没有匹配项的情况下返回 null。
+返回的数组虽然是 Array 的实例，但包含两个额外的属性：index 和 input。其中，index 表示匹配项在字符串中的位置，而 input 表示应用正则表达式的字符串。在数组中，第一项是与整个模式匹配的字符串，其他项是与模式中的捕获组匹配的字符串（如果模式中没有捕获组，则该数组只包含一项）
+
+**那么index表示这一次出现的位置，lastIndex表示下一次我从哪里来开始匹配**
+**设置了全局则会一次性匹配完毕；没有设置全部则是一步一步来；lastIndex 的值在每次调用 exec()后都会增加，而在非全局模式下则始终保持不变。**
+
+2. test()
+校验是否匹配
+
+- RegExp构造函数属性
+1. RegExp.input
+2. RegExp.leftContext
+3. RegExp.rightContext
+4. RegExp.lastMatch // 最近一次匹配到的
+5. RegExp.multiline
+6. RegExp.lastParen //最近一个捕获组---参见正则“组”概念
+
+```
+str.match(reg)
+reg.test(str)
+str.replace(/reg/, 'as')
+```
+
+## Function类型
+- Function本质上也是一个对象
+- Function有两种定义方式，函数表达式，普通函数
+```
+var func = function(){} // 不存在变量名提升
+function func(){} // 存在变量名提升
+```
+> 实际上，解析器在向执行环境中加载数据时，对函数声明和函数表达式并非一视同仁。解析器会率先读取函数声明，并使其在执行任何代码之前可用（可以访问）；至于函数表达式，则必须等到解析器执行到它所在的代码行，才会真正被解释执行
+
+- 匿名函数/立即执行函数
+```
+(function(){
+    //...
+})()
+```
+- 函数可以当成参数传递,也可以当成返回值
+```
+function(a, callback){
+    callback();
+}
+
+a()()() //接连调用 redux里的connect
+```
+> 还记得吧，要访问函数的指针而不执行函数的话，必须去掉函数名后
+面的那对圆括号。因此上面例子中传递给 callSomeFunction()的是 add10 和 getGreeting，而不是执行它们之后的结果。
+
+**原来在滴滴的时候犯过这种低级错误排查了很久，后来看到佳佳也和我一样写同一个BUG**
+
+- 没有重载
+> “函数是对象，函数名是指针”
+没有函数签名
+
+- 函数的内部属性
+1. arguments
+
+> 虽然 arguments 的主要用途是保存函数参数，但这个对象还有一个名叫 callee 的属性，该属性是一个指针，指向拥有这个 arguments 对象的函数。
+
+**递归自己调用自己的时候用这个callee代替函数名，防止改名的时候不彻底**
+
+> 当函数在严格模式下运行时，访问 arguments.callee 会导致错误。ECMAScript 5 还定义了arguments.caller 属性，但在严格模式下访问它也会导致错误，而在非严格模式下这个属性始终是undefined。定义这个属性是为了分清 arguments.caller 和函数的 caller 属性。以上变化都是为了加强这门语言的安全性，这样第三方代码就不能在相同的环境里窥视其他代码了。严格模式还有一个限制：不能为函数的 caller 属性赋值，否则会导致错误.
+
+2. this
+
+> 函数内部的另一个特殊对象是 this，其行为与 Java 和 C#中的 this 大致类似。换句话说，this引用的是函数据以执行的环境对象——或者也可以说是 this 值
+
+> 在调用函数之前，this 的值并不确定，因此 this 可能会在代码执行过程中引用不同的对象
+
+**this到底指向谁，决定于在那个环境中调用**
+
+- 函数的属性和方法
+1. length: 希望接受的参数的长度
+2. prototype: 原型 和继承有关好看后续
+> prototype 属性是不可枚举的，因此使用 for-in 无法发现
+
+**回答了我之前的问题**
+
+3. call(this, arguments) & apply(this, [arg1, arg2, ...])
+
+> 使用 call()（或 apply()）来扩充作用域的最大好处，就是对象不需要与方法有任何耦合关系。
+
+**A.func() 变成 fun.call(自己决定的this， args)**
+
+4. bind
+> 这个方法会创建一个函数的实例，其 this 值会被绑定到传给 bind()函数的值
+
+## 基本包装类
+Boolean, Number, String
+> 引用类型与基本包装类型的主要区别就是对象的生存期。使用 new 操作符创建的引用类型的实例，在执行流离开当前作用域之前都一直保存在内存中。而自动创建的基本包装类型的对象，则只存在于一行代码的执行瞬间，然后立即被销毁。
+
+- Boolean类型
+
+
+
