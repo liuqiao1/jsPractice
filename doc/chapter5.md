@@ -291,6 +291,126 @@ Boolean, Number, String
 > 引用类型与基本包装类型的主要区别就是对象的生存期。使用 new 操作符创建的引用类型的实例，在执行流离开当前作用域之前都一直保存在内存中。而自动创建的基本包装类型的对象，则只存在于一行代码的执行瞬间，然后立即被销毁。
 
 - Boolean类型
+1. Boolean(true)是一个实例对象， true是一个bool值
+2. 的建议是永远不要使用 Boolean 对象。
+
+- Number类型
+1. 重写了valueOf() toLocaleString() toString()
+2. toFixed(x) 显示x位小数
+
+> 能够自动舍入的特性，使得 toFixed()方法很适合处理货币值。
+3. toExponential(x) 使用科学记数法表示
+4. toPrecision(x)
+> 如果你想得到表示某个数值的最合适的格式，就应该使用 toPrecision()方法。
+对于一个数值来说，toPrecision()方法可能会返回固定大小（fixed）格式，也可能返回指数
+（exponential）格式；具体规则是看哪种格式最合适。这个方法接收一个参数，即表示数值的所有数字的
+位数（不包括指数部分）。
+```
+var num = 99;
+alert(num.toPrecision(1)); //"1e+2"
+alert(num.toPrecision(2)); //"99"
+alert(num.toPrecision(3)); //"99.0" 
+```
+**这几个方法我还真不知道，在某些场景下应该是很有用的**
+
+- String类型
+1. 于Java不同，string是一个基本类型，但是new String('str')是一个实例对象
+2. 属性
+* length
+3. 方法
+* charAt()
+* charCodeAt()
+
+* slice(start, end)
+* substr(start, 字符数)
+* substring(start, end)
+
+** 包前不包后**
 
 
 
+* indexOf()
+* lastIndexOf()
+
+* replace()
+> 。如果第一个参数是字符串，那么只会替换第一个子字符串。要想替
+换所有子字符串，唯一的办法就是提供一个正则表达式，而且要指定全局（g）标志
+
+
+**还以为只有第二种用途^^**
+* match()
+* search()
+> search()方法返回字符串中第一个匹配项的索引；如果没有找到匹配项，则返回-1。而且，search()方法始终是从字符串开头向后查找模式。
+* split()
+> 这个方法可以基于指定的分隔符将一个字符串分割成
+多个子字符串，并将结果放在一个数组中。分隔符可以是字符串，也可以是一个 RegExp 对象（这个方
+法不会将字符串看成正则表达式）。split()方法可以接受可选的第二个参数，用于指定数组的大小，以便确保返回的数组不会超过既定大小
+
+**还不知道有这个功能----**
+
+* splice()
+
+* trim()
+> 这个方法会创建一个字符串的副本，删除**前置及后缀**的所有空格，然后返回结果
+
+* toLowerCase()
+* toUpperCase()
+
+**
+* concat()
+> 虽然 concat()是专门用来拼接字符串的方
+法，但实践中使用更多的还是加号操作符（+）。而且，使用加号操作符在大多数情况下都比使用concat()
+方法要简便易行（特别是在拼接多个字符串的情况下）
+**难怪看起来可陌生了**
+
+* localeCompare()
+
+返回值为0 代表两个字符串相等
+```
+"abc"=="abc"
+true
+"abc" === "abc"
+true
+// 猜测可能会在后台调用了这个方法
+```
+* fromCharCode()
+```
+alert(String.fromCharCode(104, 101, 108, 108, 111)); //"hello" 
+```
+**
+
+## 单体内置对象
+> 由 ECMAScript 实现提供的、**不依赖**于宿主环境的对象，这些对象在 ECMAScript 程序执行之前就已经存在了。”意思就是说，开发人员不必显式地实例化内置对象，因为它们已经实例化了。
+
+- Global 对象
+1. URI编码方法
+* encodeURI()
+* encodeURIComponent()
+
+> 主要区别：encodeURI()不会对本身属于 URI 的特殊字符进行编码，例如冒号、正斜杠、问号和井字号；而 encodeURIComponent()则会对它发现的任何非标准字符进行编码。一般来说，我们使用 encodeURIComponent() 方法的时候要比使用encodeURI()更多，因为在实践中更常见的是对查询字符串参数而不是对基础 URI进行编码。
+
+**之所以会有这两个的方法，是因为浏览器不能准确识别包含特殊符号如空格的URI，用上encode解码之后可以进行替换**
+
+3. decodeURI()
+4. decodeURIComponent()
+
+**原路返回，不可交叉**
+
+2. window对象
+>ECMAScript 虽然没有指出如何直接访问 Global 对象，但 Web 浏览器都是**将这个全局对象作为window 对象的一部分加以实现的**。因此，在全局作用域中声明的所有变量和函数，就都成为了 window
+对象的属性。
+
+- Math 对象
+Math.PI
+Math.random() // 返回大于等于 0 小于 1
+Math.floor()
+Math.Round()// 四舍五入
+Math.ceil()
+Math.sqrt()
+Math.max()
+Math.min()
+```
+var values = [1, 2, 3, 4, 5, 6, 7, 8];
+var max = Math.max.apply(Math, values);
+这个技巧的关键是把 Math 对象作为 apply()的第一个参数，从而正确地设置 this 值。然后，可以将任何数组作为第二个参数。
+```
