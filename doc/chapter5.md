@@ -275,6 +275,8 @@ a()()() //接连调用 redux里的connect
 2. prototype: 原型 和继承有关好看后续
 > prototype 属性是不可枚举的，因此使用 for-in 无法发现
 
+**这里说的是prototype这个属性，而不是说原型对象，使用for-in不管是实例的还是原型的都可以遍历出来**
+
 **回答了我之前的问题**
 
 3. call(this, arguments) & apply(this, [arg1, arg2, ...])
