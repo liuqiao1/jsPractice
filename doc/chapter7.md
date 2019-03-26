@@ -163,3 +163,67 @@ p.setName("Kitty");
 
 ```
 > 变量 name 就变成了一个静态的、由所有实例共享的属性。也就是说，在一个实例上调用 setName()会影响所有实例。以这种方式创建静态私有变量会因为使用原型而增进代码复用，但每个实例都没有自己的私有变量。到底是使用实例变量，还是静态私有变量，最终还是要视你的具体需求而定。
+
+## 模块模式
+> 使用模块模式、增强的模块模式来实现单例的特权方法
+java中的单例，有一个专门的getInstance方法，每次会判断实例是否存在，如果不存在则返回新创建的实例；
+js中的单例按照惯例，JavaScript 是以对象字面量的方式来创建单例对象的。
+```
+//全局环境中只有一个sinfgleton,重复定义会覆盖
+var singleton = {
+ name : value,
+ method : function () {
+ //这里是方法的代码
+ }
+}; 
+```
+为单例添加私有的属性和方法
+```
+function application(){
+    var components = [];
+    components.push(new BaseComponent());
+
+    return {
+        getComponentCount : function(){
+        return components.length;
+        },
+        registerComponent : function(component){
+        if (typeof component == "object"){
+        components.push(component);
+        }
+        } 
+    }
+}
+
+application().getComponentCount();
+application().registerComponent(new BaseComponent())
+```
+> 简言之，如果必须创建一个对象并以某些数据对其进行初始化，同时还要公开一些能够访问这些私有
+数据的方法，那么就可以使用模块模式。
+
+## 增强的模块模式
+这种增强的模块模式适合那些单例必须是某种类型的实例，同时还必须添加某些属性和（或）方法对其加以增强的情况。
+```
+var application = function(){
+ //私有变量和函数
+ var components = new Array();
+ //初始化
+ components.push(new BaseComponent());
+ //创建 application 的一个局部副本
+ var app = new BaseComponent();!!!
+ //公共接口
+ app.getComponentCount = function(){
+ return components.length;
+ };
+ app.registerComponent = function(component){
+ if (typeof component == "object"){
+ components.push(component);
+ }
+ };
+ //返回这个副本
+ return app;
+}(); 
+```
+**ES6里有什么替代方案,感觉这样子写不符合java那种面向对象的思路**
+
+这不就是ES6中的module么？？一个js文件就是一个模块，哪些变量和方法是私有的，那就不要export好了。。。
